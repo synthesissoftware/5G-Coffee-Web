@@ -3,21 +3,19 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
-  "assets/AssetManifest.json": "98e1109149629655f7cbadbd3eb62c6a",
-"assets/assets/fonts/OpenSans-Bold.ttf": "50145685042b4df07a1fd19957275b81",
-"assets/assets/fonts/OpenSans-Regular.ttf": "629a55a7e793da068dc580d184cc0e31",
-"assets/assets/logo.png": "1a801b8a92e66466069eb82dc632f388",
-"assets/FontManifest.json": "f79fbe18109228a891f6a90617def6cc",
+  "assets/AssetManifest.json": "96a5c63d0326e363cc42793a9991374f",
+"assets/assets/login_background.jpg": "08227ceb8642aa087a4cc45fa4b92d71",
+"assets/FontManifest.json": "01700ba55b08a6141f33e168c4a6c22f",
 "assets/fonts/MaterialIcons-Regular.ttf": "56d3ffdef7a25659eab6a68a3fbfaf16",
-"assets/NOTICES": "f299bcaa90aff2c5a6fbe3d14283b48a",
+"assets/NOTICES": "25f31ce5e1cddf19d0b88c28cd7bd39d",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "115e937bb829a890521f72d2e664b632",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"index.html": "831e1ac7c2c9287b0c4b20c92f01f155",
-"/": "831e1ac7c2c9287b0c4b20c92f01f155",
-"main.dart.js": "856e0fff7cdc13f405f09c1b40582744",
-"manifest.json": "85e0c537709b3825001656719cb0a9bf"
+"index.html": "485b0c43f35d6dde0ecff98cccd9d621",
+"/": "485b0c43f35d6dde0ecff98cccd9d621",
+"main.dart.js": "8d7e0c4f9718aebf81d23f4f5d81a62f",
+"manifest.json": "ab5ad0c3f15c34225935530ee10b9d09"
 };
 
 // The application shell files that are downloaded before a service worker can
@@ -26,7 +24,7 @@ const CORE = [
   "/",
 "main.dart.js",
 "index.html",
-"assets/LICENSE",
+"assets/NOTICES",
 "assets/AssetManifest.json",
 "assets/FontManifest.json"];
 
@@ -108,7 +106,7 @@ self.addEventListener("fetch", (event) => {
   if (event.request.url == origin || event.request.url.startsWith(origin + '/#')) {
     key = '/';
   }
-  // If the URL is not the the RESOURCE list, skip the cache.
+  // If the URL is not the RESOURCE list, skip the cache.
   if (!RESOURCES[key]) {
     return event.respondWith(fetch(event.request));
   }
@@ -131,11 +129,11 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener('message', (event) => {
   // SkipWaiting can be used to immediately activate a waiting service worker.
   // This will also require a page refresh triggered by the main worker.
-  if (event.message == 'skipWaiting') {
+  if (event.data === 'skipWaiting') {
     return self.skipWaiting();
   }
 
-  if (event.message = 'downloadOffline') {
+  if (event.message === 'downloadOffline') {
     downloadOffline();
   }
 });
@@ -155,8 +153,8 @@ async function downloadOffline() {
   }
   for (var resourceKey in Object.keys(RESOURCES)) {
     if (!currentContent[resourceKey]) {
-      resources.add(resourceKey);
+      resources.push(resourceKey);
     }
   }
-  return Cache.addAll(resources);
+  return contentCache.addAll(resources);
 }
